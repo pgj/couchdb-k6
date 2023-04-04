@@ -1,0 +1,7 @@
+*~
+documents.json
+results.json
+*.txt
+yarn-error.log
+yarn.lock
+node_modules
