@@ -1,0 +1,13 @@
+{
+    "name": "couchdb-k6-mango-couchdb_4482",
+    "version": "0.0.1",
+    "license": "Apache-2.0",
+    "dependencies": {
+        "@faker-js/faker": "^7.6.0"
+    },
+    "scripts": {
+        "clean": "rm -f documents.json *.txt results.json",
+        "generate-data": "node ./generate-data.mjs",
+        "test": "k6 run --out json=results.json main.js"
+    }
+}
