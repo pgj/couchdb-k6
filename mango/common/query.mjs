@@ -94,7 +94,7 @@ export const Exists = (shouldExist) => {
 export const RegEx = (regex) => {
     return {
 	id: Symbol('regex'),
-	generator: (_) => { return { '$regex': new RegExp(regex).toString() } }
+	generator: (_) => { return { '$regex': new RegExp(regex).source } }
     }
 }
 
