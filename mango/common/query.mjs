@@ -20,8 +20,7 @@ function enumGenerator(input) {
 	values = new Array(...input)
 	break
     case 'string':
-	const contents = open(input, 't')
-	values = contents.split(/\r?\n/)
+	values = input.split(/\r?\n/)
 	break
     default:
     }
