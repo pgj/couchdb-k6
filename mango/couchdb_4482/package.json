@@ -1,6 +1,6 @@
 {
     "name": "couchdb-k6-mango-couchdb_4482",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "license": "Apache-2.0",
     "dependencies": {
         "@faker-js/faker": "^7.6.0"
