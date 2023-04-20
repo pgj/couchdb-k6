@@ -15,65 +15,14 @@
 import encoding from 'k6/encoding'
 import { Trend } from 'k6/metrics'
 
-import { Int, Enum, Bool } from '../common/query.mjs'
-import { Compare, Is, In, NotIn, RegEx, Exists, Size, MaybeNot, OneOf, NonEmptySlice } from '../common/query.mjs'
-import { generateFindQuery } from '../common/query.mjs'
+import { genericBy, byAge, managers } from './config.queries.mjs'
+import { Enum, generateFindQuery } from '../common/query.mjs'
 
-const byAge = {
-    fields: ['_id', 'age'],
-    selector: {
-	fields: [
-	    { name: 'age', source: Compare(Int({ min: 18, max: 99 })) }
-	],
-	width: 3,
-	depth: 1
-    },
-    skip: { min: 0, max: 1000 },
-    limit: { min: 1, max: 100 },
-    sort: [{'age': 'asc'}]
+function fileEnum(filename) {
+    return Enum(open(filename, 't'))
 }
 
-const managers = {
-    fields: ['_id', 'company'],
-    selector: {
-	verbatim: {
-	    '$and': [{ 'manager': true }, { 'company': {'$exists': true }}]
-	}
-    },
-    skip: { min: 0, max: 1000 },
-    limit: { min: 1, max: 100 },
-    sort: [{'company': 'asc'}]
-}
-
-const generic = {
-    fields: ['_id', 'user_id', 'name', 'age', 'location', 'company', 'email', 'manager', 'twitter', 'favorites'],
-    selector: {
-	fields: [
-	    { name: 'user_id', source: Compare(Int({ min: 0, max: 10000 })) },
-	    { name: 'name.first', source: Compare(Enum('first_names.txt')) },
-	    { name: 'name.last', source: Compare(Enum('last_names.txt')) },
-	    { name: 'age', source: Compare(Int({ min: 14, max: 99 })) },
-	    { name: 'location.state', source: Compare(Enum('states.txt')) },
-	    { name: 'location.city', source: Compare(Enum('cities.txt')) },
-	    { name: 'location.address.street', source: Compare(Enum('streets.txt')) },
-	    { name: 'location.address.number', source: Compare(Int({ min: 10, max: 10000 })) },
-	    { name: 'company', source: Compare(Enum('companies.txt')) },
-	    { name: 'email', source: Compare(Enum('emails.txt')) },
-	    { name: 'manager', source: Bool() },
-	    { name: 'twitter', source: MaybeNot(RegEx('^@.*\.*[0-9]+$')) },
-	    { name: 'favorites',
-	      source: OneOf([In(NonEmptySlice(['Erlang', 'Lisp', 'Javascript'])),
-			     NotIn(NonEmptySlice(['C', 'C++', 'Java'])),
-			     Size(Int({ min: 1, max: 3 }))
-	      ])
-	    }
-	],
-	width: 4,
-	depth: 2
-    },
-    skip: { min: 0, max: 1000 },
-    limit: { min: 1, max: 100 }
-}
+const generic = genericBy(fileEnum)
 
 let config = {
     k6_options: {

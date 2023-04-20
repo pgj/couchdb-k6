@@ -6,8 +6,10 @@
         "@faker-js/faker": "^7.6.0"
     },
     "scripts": {
-        "clean": "rm -f documents.json *.txt results.json",
-        "generate-data": "node ./generate-data.mjs",
-        "test": "k6 run --out json=results.json main.js"
+	"clean": "rm -f documents.json *.txt queries.json results.json",
+	"generate-data": "node ./generate-data.mjs",
+	"generate-queries": "node ./generate-queries.mjs > queries.json",
+	"create-database": "k6 run main.js --no-teardown --iterations=1",
+	"test": "k6 run --out json=results.json main.js"
     }
 }
