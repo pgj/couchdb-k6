@@ -53,7 +53,7 @@ export function setupFrom(config) {
 	    http.del(url, '', config.parameters)
 	}
 	else if (exists.status != 404) {
-	    throw new Error(`Failed to remove existing database, status: ${exists.status}`)
+	    throw new Error(`Failed to remove existing database, status: ${exists.status}.`)
 	}
 
 	const create = http.put(url, '', config.parameters)
@@ -62,12 +62,18 @@ export function setupFrom(config) {
 	    throw new Error(`Failed to properly create the database, status: ${create.status}.`)
 	}
 
-	{
-	    const bulkDocsUrl = `${url}/_bulk_docs`
-	    const docsCreated = http.post(bulkDocsUrl, documents, config.parameters)
+	const bulkDocsUrl = `${url}/_bulk_docs`
+	const bulkBatchSize = 500
+	const docs = JSON.parse(documents)['docs']
+
+	for (let offset = 0; offset < docs.length; offset += bulkBatchSize) {
+	    const batch = JSON.stringify({
+		'docs': docs.slice(offset, offset + bulkBatchSize)
+	    })
+	    const docsCreated = http.post(bulkDocsUrl, batch, config.parameters)
 
 	    if (docsCreated.status != 201) {
-		throw new Error('Failed to populate the database with documents.')
+		throw new Error(`Failed to populate the database with documents, offset: ${offset}, status: ${docsCreated.status}.`)
 	    }
 	}
 

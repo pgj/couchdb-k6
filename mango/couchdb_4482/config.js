@@ -62,7 +62,6 @@ let config = {
     username: 'adm',
     password: 'pass',
     randomSeed: 42,
-    documentCount: 10000,
     documents: 'documents.json'
 }
 
