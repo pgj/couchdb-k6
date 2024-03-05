@@ -103,7 +103,7 @@ First version, which will create `http://127.0.0.1:15984`:
 
 ```console
 $ cd /tmp/couchdb1
-$ dev/run -a adm:pass -n 1 --no-join
+$ dev/run --admin=adm:pass --nodes=1 --no-join
 ...
 ```
 
@@ -112,17 +112,11 @@ Second version, which will create `http://127.0.0.1:25984` and
 
 ```console
 $ cd /tmp/couchdb2
-$ dev/run -a adm:pass -n 3 --no-join
+$ dev/run --admin=adm:pass --nodes=2 --node-number-seed=2 --no-join
 ...
 ```
 
-If the different versions are run on the same computer, the first one
-that starts to listen on a specific port will only be assigned to it.
-As a consequence, if the clusters are started after each other with
-increasing number of nodes, the unusued ports will be gradually
-allocated for the newer nodes.
-
-The configure the cluster among the nodes, run `setup_cluster.sh`.
+To configure the cluster among the nodes, run `setup_cluster.sh`.
 This script uses the `couchdb.conf` configuration file has the values
 for the necessary parameters.  For example:
 
@@ -134,10 +128,10 @@ port=15984
 node_ports="25984 35984"
 ```
 
-Here the `ports` tells on which port the setup coordinator node could
-be found, and `node_ports` gives information about the ports for the
-rest of the nodes.  Currently, it is assumed that all the nodes are
-run on the same host.
+Here the `port` tells on which port the node for the first version
+could be found, and `node_ports` gives information about the ports for
+the rest of the nodes for the second version.  Currently, it is
+assumed that all the nodes are run on the same host.
 
 ## Result Comparison
 
